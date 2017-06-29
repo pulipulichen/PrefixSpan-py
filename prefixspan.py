@@ -2,7 +2,7 @@
 
 """
 Usage:
-    prefixspan.py <input-file>
+    prefixspan.py <input-file> <threshold>
 """
 
 from __future__ import print_function
@@ -14,7 +14,7 @@ from heapq import heappop, heappush
 from docopt import docopt
 
 import csv
-import os.path
+import os
 
 # Input file name
 #input_path = "input.txt"
@@ -67,8 +67,8 @@ if __name__ == "__main__":
     argv = docopt(__doc__)
 
     minsup = 1
-    f = frequent_rec
-    k = 10
+    k = int(argv["<threshold>"]) + 1 
+    f = topk_rec
         
     if argv["<input-file>"]: 
         input_path = argv["<input-file>"]
@@ -81,48 +81,54 @@ if __name__ == "__main__":
         # for line in sys.stdin
     # ]
 
-    '''
-    db = [
-        ["0", "1", "2", "3", "4"],
-        ["1", "1", "1", "3", "4"],
-        ["2", "1", "2", "2", "0"],
-        ["1", "1", "1", "2", "2"],
-    ]
-    '''
-    
     if os.path.exists(input_path) == False:
         print("No file existed: " + input_path)
         quit()
     
-    db = []
-    with open(input_path) as f:
-        for line in f:
-            db.append(line.strip().split(" "))
+    input_files = []
+    dir = ""
+    if os.path.isfile(input_path):
+        input_files.append(input_path)
+    else:
+        dir = input_path
+        for f in os.listdir(input_path):
+            if f.endswith(".txt"):
+                input_files.append(f)
+    
+    if dir != "" and not os.path.exists(dir + "-output"):
+        os.makedirs(dir + "-output")
     
     # ----------------------------------
         
-    f([], [(i, 0) for i in xrange(len(db))])
-
-    results.sort(key=(lambda (freq, patt): (-freq, patt)))
-    filtered_result = []
-    for item in results:
-        if len(item[1]) > 0:
-            item_list = [len(item[1])*item[0], len(item[1]), item[0], item[1]]
-            #filtered_result.append(item_list)
-            filtered_result.append(item_list)
-    
-    #a = results[0][0]
-    #print(filtered_result)
-    #print top_k_result
-    #heappop(results)
-    results = filtered_result
-    results.sort(key=(lambda x:x[0]), reverse=True)
-    
-    f = open(output_path,"wb")
-    w = csv.writer(f)
-    w.writerows([["score", "itemset_length", "frequency", "itemset"]])
-    w.writerows(results)
-    f.close()
+    for input_path_item in input_files:
+        output_path = "output-" + input_path_item + ".csv"
+        if dir != "":
+            input_path_item = dir + "/" + input_path_item
+            output_path = dir + "-output" + "/" + output_path
         
-    for (score, length, freq, patt) in results:
-        print("{}\t{}\t{}\t{}".format(score, length, freq, patt))
+        db = []
+        with open(input_path_item) as f:
+            for line in f:
+                db.append(line.strip().split(" "))
+        
+        topk_rec([], [(i, 0) for i in xrange(len(db))])
+        
+        results.sort(key=(lambda (freq, patt): (-freq, patt)))
+        filtered_result = []
+        for item in results:
+            if len(item[1]) > 0:
+                item_list = [len(item[1])*item[0], len(item[1]), item[0], item[1]]
+                filtered_result.append(item_list)
+        
+        results = filtered_result
+        results.sort(key=(lambda x:x[0]), reverse=True)
+        
+        f = open(output_path,"wb")
+        w = csv.writer(f)
+        w.writerows([["score", "itemset_length", "frequency", "itemset"]])
+        w.writerows(results)
+        f.close()
+        
+        print(output_path)
+        for (score, length, freq, patt) in results:
+            print("{}\t{}\t{}\t{}".format(score, length, freq, patt))

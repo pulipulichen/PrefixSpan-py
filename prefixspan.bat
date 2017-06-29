@@ -1,1 +1,1 @@
-python prefixspan.py top-k 1000
+python prefixspan.py input

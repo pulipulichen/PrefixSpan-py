@@ -2,7 +2,7 @@
 
 """
 Usage:
-    prefixspan.py (frequent | top-k) <threshold>
+    prefixspan.py <input-file>
 """
 
 from __future__ import print_function
@@ -14,6 +14,7 @@ from heapq import heappop, heappush
 from docopt import docopt
 
 import csv
+import os.path
 
 # Input file name
 #input_path = "input.txt"
@@ -59,8 +60,22 @@ def topk_rec(patt, mdb):
         topk_rec(patt + [c], newmdb)
 
 if __name__ == "__main__":
+    
+    # -------------------------------------------------------
+    # Load argv
+    
     argv = docopt(__doc__)
 
+    minsup = 1
+    f = frequent_rec
+    k = 10
+        
+    if argv["<input-file>"]: 
+        input_path = argv["<input-file>"]
+    
+    # ---------------------------------------------
+    # Prepare data
+    
     # db = [
         # [int(v) for v in line.rstrip().split(' ')]
         # for line in sys.stdin
@@ -75,43 +90,39 @@ if __name__ == "__main__":
     ]
     '''
     
+    if os.path.exists(input_path) == False:
+        print("No file existed: " + input_path)
+        quit()
+    
     db = []
     with open(input_path) as f:
         for line in f:
             db.append(line.strip().split(" "))
-            
-    # -------------------------------------------------------
-
-    if argv["frequent"]:
-        minsup = int(argv["<threshold>"])
-        f = frequent_rec
-    elif argv["top-k"]:
-        k = int(argv["<threshold>"])
-        f = topk_rec
-
+    
+    # ----------------------------------
+        
     f([], [(i, 0) for i in xrange(len(db))])
 
-    if argv["top-k"]:
-        results.sort(key=(lambda (freq, patt): (-freq, patt)))
-        filtered_result = []
-        for item in results:
-            if len(item[1]) > 0:
-                item_list = [len(item[1])*item[0], len(item[1]), item[0], item[1]]
-                #filtered_result.append(item_list)
-                filtered_result.append(item_list)
-        
-        #a = results[0][0]
-        #print(filtered_result)
-        #print top_k_result
-        #heappop(results)
-        results = filtered_result
-        results.sort(key=(lambda x:x[0]), reverse=True)
-        
-        f = open(output_path,"wb")
-        w = csv.writer(f)
-        w.writerows([["score", "itemset_length", "frequency", "itemset"]])
-        w.writerows(results)
-        f.close()
+    results.sort(key=(lambda (freq, patt): (-freq, patt)))
+    filtered_result = []
+    for item in results:
+        if len(item[1]) > 0:
+            item_list = [len(item[1])*item[0], len(item[1]), item[0], item[1]]
+            #filtered_result.append(item_list)
+            filtered_result.append(item_list)
+    
+    #a = results[0][0]
+    #print(filtered_result)
+    #print top_k_result
+    #heappop(results)
+    results = filtered_result
+    results.sort(key=(lambda x:x[0]), reverse=True)
+    
+    f = open(output_path,"wb")
+    w = csv.writer(f)
+    w.writerows([["score", "itemset_length", "frequency", "itemset"]])
+    w.writerows(results)
+    f.close()
         
     for (score, length, freq, patt) in results:
         print("{}\t{}\t{}\t{}".format(score, length, freq, patt))

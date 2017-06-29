@@ -92,7 +92,7 @@ if __name__ == "__main__":
     else:
         dir = input_path
         for f in os.listdir(input_path):
-            if f.endswith(".txt"):
+            if f.endswith(".txt") or f.endswith(".csv"):
                 input_files.append(f)
     
     if dir != "" and not os.path.exists(dir + "-output"):
@@ -101,17 +101,59 @@ if __name__ == "__main__":
     # ----------------------------------
         
     for input_path_item in input_files:
+        results = []
         output_path = "output-" + input_path_item + ".csv"
         if dir != "":
             input_path_item = dir + "/" + input_path_item
             output_path = dir + "-output" + "/" + output_path
         
+        # --------------------------------------
+        print(input_path_item)
         db = []
-        with open(input_path_item) as f:
-            for line in f:
-                db.append(line.strip().split(" "))
+        
+        if input_path_item.endswith(".txt"):
+            with open(input_path_item) as f:
+                for line in f:
+                    db.append(line.strip().split(" "))
+        elif input_path_item.endswith(".csv"):
+            # read file from csv
+            f = open(input_path_item, 'r')
+            firstline = True
+            line = []
+            last_user = False
+            last_seq_id = False
+            for row in csv.DictReader(f, ["user_id", "seq_id", "event"]):
+                if firstline:    #skip first line
+                    firstline = False
+                    continue
+                
+                event = row["event"]
+                user = row["user_id"]
+                seq_id = row["seq_id"]
+                
+                if user != last_user:
+                    db.append(line)
+                    line = []
+                    last_seq_id = False
+                
+                if seq_id != last_seq_id:
+                    line.append(event)
+                else:
+                    # merge same event
+                    last_events = line[-1].split("&")
+                    #print(((event in last_events), event, last_events))
+                    if not event in last_events:
+                        last_events.append(event)
+                        line[-1] = "&".join(last_events)
+                last_user = row["user_id"]
+                last_seq_id = row["seq_id"]
+            db.append(line)
+            
+        # -------------------------------------
         
         topk_rec([], [(i, 0) for i in xrange(len(db))])
+        
+        # --------------------------------------
         
         results.sort(key=(lambda (freq, patt): (-freq, patt)))
         filtered_result = []

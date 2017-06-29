@@ -1,1 +1,1 @@
-python prefixspan.py input 100
+python prefixspan.py input 1000

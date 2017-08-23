@@ -24,8 +24,10 @@ PrefixSpan改進了FreeSpan演算法，即透過前綴投影發掘序列模式�
 PrefixSpan適用於稠密資料集和稀疏資料集兩種，而且在稠密資料集中比傳統的Apriori類演算法更有效率，相對的缺點是PrefixSpan實作難度較高，目前仍較少人採用。
 
 # Tip
-I strongly encourage using PyPy instead of CPython to run the script for best performance. In my own experience, it is 9x times faster in average.
+- I strongly encourage using PyPy instead of CPython to run the script for best performance. In my own experience, it is 9x times faster in average.
+- 中文註解的做法：https://github.com/pulipulichen/PrefixSpan-py/blob/master/prefixspan.py#L2
 
 # Todo
 - 如果沒有時間資料，那就加入時間資料
 - 要先以時間資料排序
+

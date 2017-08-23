@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+#-*- coding: utf-8 -*-
 
 """
 Usage:
@@ -120,6 +121,10 @@ if __name__ == "__main__":
         elif input_path_item.endswith(".csv"):
             # read file from csv
             f = open(input_path_item, 'r')
+            
+            # @TODO 判斷有沒有時間欄位，沒有的話就捨棄
+            
+            # @TODO 加上先依照時間順序排序的演算法
             
             firstline = True
             line = []

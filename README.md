@@ -5,9 +5,9 @@
 - Cannot work on Python 3. Tested on Python 2.7. https://www.python.org/downloads/release/python-2713/
 
 # Usage
-1. Put files in "input" directory. File format: https://github.com/pulipulichen/PrefixSpan-py/blob/master/input/input-file-format.md
+1. Put files in "input" directory. Input file format: https://github.com/pulipulichen/PrefixSpan-py/blob/master/input/input-file-format.md
 2. Excute prefixspan.bat
-3. Get result in "input-output" directory
+3. Get result in "input-output" directory. Output file format:  https://github.com/pulipulichen/PrefixSpan-py/blob/master/input-output/output-file-format.md
 
 # Features
 Based on state-of-the-art [PrefixSpan](http://www.cs.sfu.ca/~jpei/publications/span.pdf) algorithm.
@@ -27,7 +27,4 @@ PrefixSpan適用於稠密資料集和稀疏資料集兩種，而且在稠密資�
 - I strongly encourage using PyPy instead of CPython to run the script for best performance. In my own experience, it is 9x times faster in average.
 - 中文註解的做法：https://github.com/pulipulichen/PrefixSpan-py/blob/master/prefixspan.py#L2
 
-# Todo
-- 如果沒有時間資料，那就加入時間資料
-- 要先以時間資料排序
 

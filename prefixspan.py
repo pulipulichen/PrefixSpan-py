@@ -125,19 +125,13 @@ if __name__ == "__main__":
             # -------------------------
             # 加上先依照時間順序排序的演算法
             
-            # -------------------------
-            
+            sorted_result = []
             firstline = True
-            line = []
-            last_user = False
-            last_seq_id = False
             seq_count = 1
-            user_count = 0
             for row in csv.DictReader(f, ["user_id", "seq_id", "event"]):
                 if firstline:    #skip first line
                     firstline = False
                     continue
-                
                 event = row["event"]
                 user = row["user_id"]
                 if event is not None:
@@ -146,6 +140,20 @@ if __name__ == "__main__":
                     event = row["seq_id"]
                     seq_id = seq_count
                     seq_count = seq_count + 1
+                item_list = [user, seq_id, event]
+                sorted_result.append(item_list)
+            sorted_result.sort(key=(lambda x:x[1]), reverse=False)
+            
+            # -------------------------
+            
+            line = []
+            last_user = False
+            last_seq_id = False
+            user_count = 0
+            for row in sorted_result:
+                user = row[0]
+                seq_id = row[1]
+                event = row[2]
                     
                 if user != last_user:
                     user_count = user_count + 1
@@ -162,8 +170,8 @@ if __name__ == "__main__":
                     if not event in last_events:
                         last_events.append(event)
                         line[-1] = "&".join(last_events)
-                last_user = row["user_id"]
-                last_seq_id = row["seq_id"]
+                last_user = row[0]
+                last_seq_id = row[1]
             db.append(line)
             
         # -------------------------------------

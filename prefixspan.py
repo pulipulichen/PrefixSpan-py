@@ -2,7 +2,7 @@
 
 """
 Usage:
-    prefixspan.py <input-file> <threshold>
+    prefixspan.py <input-file> <k-top-threshold>
 """
 
 from __future__ import print_function
@@ -17,8 +17,8 @@ import csv
 import os
 
 # Input file name
-#input_path = "input.txt"
-input_path = "task_all_list.txt"
+input_path = "input.txt"
+#input_path = "task_all_list.txt"
 
 # Output file name
 output_path = "output" + input_path + ".csv"
@@ -54,6 +54,7 @@ def topk_rec(patt, mdb):
                 l.append((i, j + 1))
 
     for (c, newmdb) in sorted(occurs.iteritems(), key=(lambda (c, newmdb): len(newmdb)), reverse=True):
+    #for (c, newmdb) in sorted(occurs.iteritems(), key=(lambda kv: (newmdb, len(newmdb))), reverse=True):
         if len(results) == k and len(newmdb) <= results[0][0]:
             break
 
@@ -67,7 +68,7 @@ if __name__ == "__main__":
     argv = docopt(__doc__)
 
     minsup = 1
-    k = int(argv["<threshold>"]) + 1 
+    k = int(argv["<k-top-threshold>"]) + 1 
     f = topk_rec
         
     if argv["<input-file>"]: 
@@ -120,10 +121,6 @@ if __name__ == "__main__":
             # read file from csv
             f = open(input_path_item, 'r')
             
-            # @TODO 判斷有沒有時間欄位，沒有的話就捨棄
-            
-            # @TODO 加上先依照時間順序排序的演算法
-            
             firstline = True
             line = []
             last_user = False
@@ -162,6 +159,7 @@ if __name__ == "__main__":
         # --------------------------------------
         
         results.sort(key=(lambda (freq, patt): (-freq, patt)))
+        #results.sort(key=(lambda kv: (-freq[1], patt[0])))
         filtered_result = []
         for item in results:
             if len(item[1]) > 0:

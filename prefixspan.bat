@@ -1,1 +1,1 @@
-python prefixspan.py input 1000
+python.exe prefixspan.py input 1000

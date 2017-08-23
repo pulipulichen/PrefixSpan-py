@@ -1,9 +1,13 @@
 修正自chuanconggao的PrefixSpan命令列工具
 
 - GitHub: https://github.com/pulipulichen/PrefixSpan-py
+- Install module first: `pip install docopt` or `python -m pip install docopt`
+- Cannot work on Python 3. Tested on Python 2.7. https://www.python.org/downloads/release/python-2713/
 
 # Usage
-Excute prefixspan.bat
+1. Put files in "input" directory. File format: https://github.com/pulipulichen/PrefixSpan-py/blob/master/input/input.txt
+2. Excute prefixspan.bat
+3. Get result in "input-output" directory
 
 # Features
 Based on state-of-the-art [PrefixSpan](http://www.cs.sfu.ca/~jpei/publications/span.pdf) algorithm.

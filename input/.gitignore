@@ -1,3 +1,6 @@
 *.txt
 *.csv
 !input.txt
+!input.csv
+!input_no_seq_id.csv
+!input-file-format.md

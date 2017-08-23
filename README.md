@@ -5,7 +5,7 @@
 - Cannot work on Python 3. Tested on Python 2.7. https://www.python.org/downloads/release/python-2713/
 
 # Usage
-1. Put files in "input" directory. File format: https://github.com/pulipulichen/PrefixSpan-py/blob/master/input/input.txt
+1. Put files in "input" directory. File format: https://github.com/pulipulichen/PrefixSpan-py/blob/master/input/input-file-format.md
 2. Excute prefixspan.bat
 3. Get result in "input-output" directory
 

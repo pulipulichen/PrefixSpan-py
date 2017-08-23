@@ -122,14 +122,17 @@ if __name__ == "__main__":
             # read file from csv
             f = open(input_path_item, 'r')
             
-            # @TODO 判斷有沒有時間欄位，沒有的話就捨棄
+            # -------------------------
+            # 加上先依照時間順序排序的演算法
             
-            # @TODO 加上先依照時間順序排序的演算法
+            # -------------------------
             
             firstline = True
             line = []
             last_user = False
             last_seq_id = False
+            seq_count = 1
+            user_count = 0
             for row in csv.DictReader(f, ["user_id", "seq_id", "event"]):
                 if firstline:    #skip first line
                     firstline = False
@@ -137,9 +140,15 @@ if __name__ == "__main__":
                 
                 event = row["event"]
                 user = row["user_id"]
-                seq_id = row["seq_id"]
-                
+                if event is not None:
+                    seq_id = row["seq_id"]
+                else:
+                    event = row["seq_id"]
+                    seq_id = seq_count
+                    seq_count = seq_count + 1
+                    
                 if user != last_user:
+                    user_count = user_count + 1
                     db.append(line)
                     line = []
                     last_seq_id = False
@@ -166,9 +175,10 @@ if __name__ == "__main__":
         results.sort(key=(lambda (freq, patt): (-freq, patt)))
         #results.sort(key=(lambda kv: (-freq[1], patt[0])))
         filtered_result = []
+        print("User count:" + str(user_count))
         for item in results:
             if len(item[1]) > 0:
-                item_list = [len(item[1])*item[0], len(item[1]), item[0], item[1]]
+                item_list = [len(item[1])*item[0], len(item[1]), item[0], (item[0] / float(user_count)), item[1]]
                 filtered_result.append(item_list)
         
         results = filtered_result
@@ -176,10 +186,10 @@ if __name__ == "__main__":
         
         f = open(output_path,"wb")
         w = csv.writer(f)
-        w.writerows([["score", "itemset_length", "frequency", "itemset"]])
+        w.writerows([["score", "itemset_length", "frequency", "frequency_percent", "itemset"]])
         w.writerows(results)
         f.close()
         
         print(output_path)
-        for (score, length, freq, patt) in results:
+        for (score, length, freq, freq_per, patt) in results:
             print("{}\t{}\t{}\t{}".format(score, length, freq, patt))

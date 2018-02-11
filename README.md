@@ -3,12 +3,16 @@
 for Python 2 (not Python 3)
 
 - GitHub: https://github.com/pulipulichen/PrefixSpan-py
+- Install module first: `pip install docopt` or `python -m pip install docopt`
+- Cannot work on Python 3. Tested on Python 2.7. https://www.python.org/downloads/release/python-2713/
 
 # @TODO 1   判斷有沒有時間欄位，沒有的話就捨棄
 # @TODO 2 加上先依照時間順序排序的演算法
 
 # Usage
-Excute prefixspan.bat
+1. Put files in "input" directory. Input file format: https://github.com/pulipulichen/PrefixSpan-py/blob/master/input/input-file-format.md
+2. Excute prefixspan.bat
+3. Get result in "input-output" directory. Output file format:  https://github.com/pulipulichen/PrefixSpan-py/blob/master/input-output/output-file-format.md
 
 # Features
 Based on state-of-the-art [PrefixSpan](http://www.cs.sfu.ca/~jpei/publications/span.pdf) algorithm.
@@ -25,8 +29,7 @@ PrefixSpan改進了FreeSpan演算法，即透過前綴投影發掘序列模式�
 PrefixSpan適用於稠密資料集和稀疏資料集兩種，而且在稠密資料集中比傳統的Apriori類演算法更有效率，相對的缺點是PrefixSpan實作難度較高，目前仍較少人採用。
 
 # Tip
-I strongly encourage using PyPy instead of CPython to run the script for best performance. In my own experience, it is 9x times faster in average.
+- I strongly encourage using PyPy instead of CPython to run the script for best performance. In my own experience, it is 9x times faster in average.
+- 中文註解的做法：https://github.com/pulipulichen/PrefixSpan-py/blob/master/prefixspan.py#L2
 
-# Todo
-- 如果沒有時間資料，那就加入時間資料
-- 要先以時間資料排序
+

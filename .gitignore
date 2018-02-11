@@ -1,1 +1,7 @@
-/[[]doc]/
+/[[]doc]/*
+/[[]doc]/*/*
+/[[]doc]/*/*/*
+/input.csv
+/input-output.csv
+/input-output/*/.~lock.*.csv#
+/input/tmp/*

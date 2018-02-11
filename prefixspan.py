@@ -7,14 +7,32 @@ Usage:
 
 from __future__ import print_function
 
+import pip
+def install_and_import(package):
+    import importlib
+    try:
+        importlib.import_module(package)
+    except ImportError:
+        import pip
+        pip.main(['install', package])
+    finally:
+        globals()[package] = importlib.import_module(package)
+
 import sys
 from collections import defaultdict
 from heapq import heappop, heappush
-
+install_and_import('docopt')
 from docopt import docopt
-
 import csv
 import os
+try:
+    from Tkinter import Tk
+    from tkFileDialog import askopenfilename
+    from tkSimpleDialog import askinteger
+except:
+    from tkinter import tk
+    from filedialog import askopenfilename
+    from simpledialog import askinteger
 
 # Input file name
 #input_path = "input.txt"
@@ -64,14 +82,19 @@ if __name__ == "__main__":
     # -------------------------------------------------------
     # Load argv
     
-    argv = docopt(__doc__)
+    try:
+        argv = docopt(__doc__)
+    except:
+        argv = {}
 
     minsup = 1
-    k = int(argv["<threshold>"]) + 1 
+    threshold = 10
     f = topk_rec
         
-    if argv["<input-file>"]: 
+    if "<input-file>" in argv: 
         input_path = argv["<input-file>"]
+    else:
+        input_path = ""
     
     # ---------------------------------------------
     # Prepare data
@@ -81,10 +104,26 @@ if __name__ == "__main__":
         # for line in sys.stdin
     # ]
 
+    user_choose_file = False
     if os.path.exists(input_path) == False:
-        print("No file existed: " + input_path)
-        quit()
-    
+        #print("No file existed: " + input_path)
+        # quit()
+        Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
+        input_path = askopenfilename(initialdir=os.path.dirname(os.path.realpath(sys.argv[0])),
+                                    title="Please select a file:",
+                                    filetypes=[('CSV files', '.csv')]) # show an "Open" dialog box and return the path to the selected file
+        user_choose_file = True
+        if os.path.exists(input_path) == False:
+            print("No file existed: " + input_path)
+            quit()
+        
+    if "<threshold>" in argv:
+        threshold = int(argv["<threshold>"])
+    else:
+        threshold = askinteger("Top-k threshold", "What is the top-k threshold?",
+                                 minvalue=10, maxvalue=1000, initialvalue=1000) 
+    k = threshold + 1 
+
     input_files = []
     dir = ""
     if os.path.isfile(input_path):
@@ -106,6 +145,10 @@ if __name__ == "__main__":
         if dir != "":
             input_path_item = dir + "/" + input_path_item
             output_path = dir + "-output" + "/" + output_path
+
+        if user_choose_file == True:
+            output_path = os.path.splitext(input_path_item)[0] + "-output.csv"
+            print(output_path)
         
         # --------------------------------------
         print(input_path_item)
@@ -120,9 +163,9 @@ if __name__ == "__main__":
             # read file from csv
             f = open(input_path_item, 'r')
             
-            # @TODO 判斷有沒有時間欄位，沒有的話就捨棄
+            # @TODO 1
             
-            # @TODO 加上先依照時間順序排序的演算法
+            # @TODO 2
             
             firstline = True
             line = []

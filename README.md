@@ -1,6 +1,11 @@
 修正自chuanconggao的PrefixSpan命令列工具
 
+for Python 2 (not Python 3)
+
 - GitHub: https://github.com/pulipulichen/PrefixSpan-py
+
+# @TODO 1   判斷有沒有時間欄位，沒有的話就捨棄
+# @TODO 2 加上先依照時間順序排序的演算法
 
 # Usage
 Excute prefixspan.bat

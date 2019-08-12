@@ -1,3 +1,5 @@
+This project will not be maintained anymore.
+
 修正自chuanconggao的PrefixSpan命令列工具
 
 for Python 2 (not Python 3)
